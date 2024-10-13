@@ -12,3 +12,22 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model User {
+  id        String    @id @default(uuid())
+  email     String    @unique
+  username  String
+  password  String
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  bookings  Booking[] // This defines the one-to-many relationship with Booking
+}
+
+model Booking {
+  id         String   @id @default(uuid())
+  userId     String
+  seatNumber String
+  amount     Int
+  status     String   // e.g., "booked", "pending", "cancelled"
+  user       User     @relation(fields: [userId], references: [id])
+}
